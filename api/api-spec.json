@@ -1,0 +1,305 @@
+{
+    "openapi":"3.0.2",
+    "info": {
+      "title":"wikipedia API",
+      "version":"1.0"
+    },
+    "servers": [
+      {"url":"http://localhost:9090/vi/api"}
+    ],
+    "paths": {
+        "/wikipedia/_all":{
+            "get":{
+                "tags": [
+                    "WIKI"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema":{
+                            "type": "integer",
+                            "default":30
+                        }
+                    },{
+                        "name": "page",
+                        "in": "query",
+                        "schema":{
+                            "type": "integer",
+                            "default":1
+                        }
+                    },{
+                        "name": "order",
+                        "in": "query",
+                        "description": "order by name (default order by A-Z)",
+                        "schema":{
+                            "type": "string",
+                            "default":"asc"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "next_page":{
+                                            "type": "string"
+                                        },
+                                        "previous_page":{
+                                            "type": "string"
+                                        },
+                                        "rows_ttl":{
+                                            "type": "integer"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "example":[
+                                                {
+                                                    "word_id":"id",
+                                                    "word":"word",
+                                                    "description":"description"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wikipedia":{
+            "get":{
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "WIKI"
+                ],
+                "description": "get explanation of word",
+                "responses": {
+                    "200":{
+                        "description": "word explanation",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "success":{
+                                            "type": "boolean"
+                                        },
+                                        "rows_ttl":{
+                                            "type": "integer"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "example":[
+                                                {
+                                                    "word_id":"xxx",
+                                                    "word":"xxx",
+                                                    "description":"xxx"
+                                                }
+                                        ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404":{
+                        "description": "word not found",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                   "type": "object",
+                                   "properties": {
+                                    "success":{
+                                        "type": "boolean",
+                                        "example":false
+                                    },
+                                    "rows_ttl":{
+                                        "type": "integer"
+                                    },
+                                    "data":{
+                                        "type": "object"
+                                    }
+                                }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wikipedia/_new":{
+            "post":{
+                "security": [
+                    {
+                        "api_key":[]
+                    }
+                ],
+                "tags": [
+                    "WIKI"
+                ],
+                "description": "add new word",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "word":{
+                                        "type": "string"
+                                    },
+                                    "description":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "success":{
+                                            "type": "boolean"
+                                        },
+                                        "rows_ttl":{
+                                            "type": "integer"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "example":[
+                                                {
+                                                    "word_id":"xxx",
+                                                    "word":"xxx",
+                                                    "description":"xxx"
+                                                }
+                                        ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401":{
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "string",
+                                    "example":"Unathorized"
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        },
+        "/wikipedia/_edit/":{
+            "put":{
+                "security": [
+                    {
+                        "api_key":[]
+                    }
+                ],
+                "tags": [
+                    "WIKI"
+                ],
+                "description": "edit wiki",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "wordID",
+                        "schema":{
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "word":{
+                                        "type": "string"
+                                    },
+                                    "description":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200":{
+                        "description": "success edit wiki",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "success":{
+                                            "type": "boolean"
+                                        },
+                                        "rows_ttl":{
+                                            "type": "integer"
+                                        },
+                                        "data":{
+                                            "type": "array",
+                                            "example":[
+                                                {
+                                                    "word_id":"xxx",
+                                                    "word":"xxx",
+                                                    "description":"xxx"
+                                                }
+                                        ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401":{
+                        "description": "Unathorized",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "string",
+                                    "example":"Unathorized"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "api_key":{
+                "type": "apiKey",
+                "name": "api-key",
+                "in": "header"
+            }
+        }
+    }
+  }
