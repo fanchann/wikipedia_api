@@ -1,0 +1,55 @@
+### Success Get Data
+GET http://localhost:9090/vi/api/wikipedia/_all
+Accept: application/json
+
+### Success Get Data with Paginate list
+GET http://localhost:9090/vi/api/wikipedia/_all?page=1&limit=10&sort=desc
+Accept: application/json
+
+### Unathorized 
+POST http://localhost:9090/vi/api/wikipedia/_new
+Accept: application/json
+{
+    "word":"Farda Ayu",
+    "description":"Farda Ayu kiw"
+}
+
+### Success Post Data
+POST http://localhost:9090/vi/api/wikipedia/_new
+Accept: application/json
+Content-Type: application/json
+api-key: sup3rs3cret
+{
+    "word":"Farda Ayu",
+    "description":"Farda Ayu kiw"
+}
+
+### Failed Edit Data, Because Data Not Found
+PUT http://localhost:9090/vi/api/wikipedia/_edit/9d041d9042ff48d599860d56f294f609b
+Accept: application/json
+Content-Type: application/json
+api-key: sup3rs3cret
+{
+    "word":"Farda Ayu",
+    "description":"Farda Ayu kiw"
+}
+
+###Success Edit Data
+PUT http://localhost:9090/vi/api/wikipedia/_edit/9d041d9042ff48d599860d56f294f609
+Accept: application/json
+Content-Type: application/json
+api-key: sup3rs3cret
+{
+    "word":"Farda Ayu",
+    "description":"Farda Ayu Nurfatika"
+}
+
+### Search Data(Found)
+GET http://localhost:9090/vi/api/wikipedia?search=Farda
+Accept: application/json
+Content-Type: application/json
+
+### Search Data(Not Found)
+GET http://localhost:9090/vi/api/wikipedia?search=Hali
+Accept: application/json
+Content-Type: application/json
